@@ -31,8 +31,8 @@ async def start_handler(message: types.Message):
 
 @dp.message_handler(commands=['picture'])
 async def start_handler(message: types.Message):
-    photo = open('media/img.png', 'rb')
-    await message.answer_photo(photo)
+    with open('media/img.png', 'rb') as photo:
+        await message.answer_photo(photo)
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
