@@ -25,7 +25,7 @@ async def start_survey(message: Message):
 
 
 async def process_name(message: Message, state: FSMContext):
-    async with state.proxy as data:
+    async with state.proxy() as data:
         data['name'] = message.text
 
     await Survey.next()
@@ -43,7 +43,7 @@ async def process_age(message: Message, state: FSMContext):
             data['age'] = int(age)
 
         await Survey.next()
-        await message.answer("Укажите кем вы являетесь")
+        await message.answer("Укажите кем вы являетесь учитель или студент")
 
 
 async def process_who(message: Message, state: FSMContext):
@@ -51,7 +51,7 @@ async def process_who(message: Message, state: FSMContext):
     if not whois.isalpha():
         await message.answer('только буквы')
     elif whois != 'учитель' or whois != 'студент':
-        await message.answer('Только "учитель" или "студент"')
+        await message.answer('Только учитель или студент')
     else:
         async with state.proxy() as data:
             data['who is'] = str(whois)
