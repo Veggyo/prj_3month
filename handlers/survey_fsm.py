@@ -1,8 +1,5 @@
 from aiogram.types import (
-    Message,
-    CallbackQuery,
-    ReplyKeyboardMarkup,
-    KeyboardButton
+    Message
 )
 
 from aiogram import Dispatcher
@@ -48,9 +45,9 @@ async def process_age(message: Message, state: FSMContext):
 
 async def process_who(message: Message, state: FSMContext):
     whois = message.text
-    if not whois.isalpha():
+    if whois.isnumeric():
         await message.answer('только буквы')
-    elif whois != 'учитель' or whois != 'студент':
+    elif not whois.isalpha():
         await message.answer('Только учитель или студент')
     else:
         async with state.proxy() as data:
@@ -67,6 +64,7 @@ async def course_geek(message: Message, state: FSMContext):
     else:
         async with state.proxy() as data:
             data['cours'] = str(course)
+    await Survey.next()
 
 
 async def cancel_survey(message: Message, state: FSMContext):
