@@ -17,3 +17,7 @@ async def address_handler(callback: types.CallbackQuery):
     :return: address
     """
     await callback.message.answer(f"Our address: 2f Cheonggu Bldg 10-31 Gangnam-gu, Seoul, Seoul, Korea, Republic of")
+
+
+# async def stf(callback: types.CallbackQuery):
+#     await callback.message.answer(f'info about students: {get_students}')

@@ -18,4 +18,5 @@ async def start_handler(message: types.Message):
     kb.add(
         types.InlineKeyboardButton("Address", url='https://github.com/')
     )
-    await bot.send_message(message.from_user.id, f"Hello {message.from_user.first_name}", reply_markup=kb)
+    user_name = message.from_user.first_name
+    await bot.send_message(message.from_user.id, f"Hello {user_name}", reply_markup=kb)

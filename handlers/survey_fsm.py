@@ -16,6 +16,11 @@ class Survey(StatesGroup):
     course = State()
 
 
+async def cancel_survey(message: Message, state: FSMContext):
+    await message.answer("Спасибо за уделенное время!")
+    await state.finish()
+
+
 async def start_survey(message: Message):
     await Survey.name.set()
     await message.answer("Ваше имя:")
@@ -68,11 +73,11 @@ async def course_geek(message: Message, state: FSMContext):
 
 
 async def cancel_survey(message: Message, state: FSMContext):
-    await state.finish()
     await message.answer("Спасибо за уделенное время!")
+    await state.finish()
 
 
-def register_fsm_handler(dp: Dispatcher):
+async def register_fsm_handler(dp: Dispatcher):
     dp.register_message_handler(start_survey, commands="surv")
     dp.register_message_handler(process_name, state=Survey.name)
     dp.register_message_handler(process_age, state=Survey.age)
