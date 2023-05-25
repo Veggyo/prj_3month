@@ -1,7 +1,6 @@
 import sqlite3
 from pathlib import Path
 from config import bot
-# from aiogram import types
 
 
 DB_NAME = 'db.sqlite3'  # 'products.db'
@@ -15,7 +14,7 @@ def init_db():
 def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Students(
-           id INTEGER PRIMARY KEY,
+           mentor_id INTEGER PRIMARY KEY,
            name TEXT NOT NULL,
            age INTEGER ,
            who TEXT NOT NULL,
@@ -24,6 +23,17 @@ def create_tables():
        )""")
     db.commit()
 
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS fsm_anketa(
+               student_id INTEGER PRIMARY KEY AUTOINCREMENT,
+               name TEXT NOT NULL,
+               age INTEGER,
+               who TEXT NOT NULL,
+               course TEXT NOT NULL,
+               mentor_id INTEGER,
+               FOREIGN KEY (mentor_id) REFERENCES Students (mentor_id)
+           )""")
+    db.commit()
 
 def insert_survey():
     cursor.execute("""INSERT INTO Students(name, age, who, course, user_id)
@@ -40,11 +50,18 @@ def get_students():
     cursor.execute('''SELECT * FROM Students''')
     return cursor.fetchall()
 
-def get_mentor(mentor_id: int):
-    cursor.execute("SELECT * FROM Students WHERE Students.id = :mentor_id", {'mentor_id': mentor_id})
-    return cursor.fetchone()
+def insert_table(data):
+    data = data.as_dict()
+    cursor.execute("""
+        INSERT INTO fsm_anketa(name, age, who, course, mentor_id) 
+        VALUES (:name, :age, :who, :course, :mentor_id)""",
+                   {'name':data['name'],
+                   'age':data['age'],
+                   'who':data['who'],
+                   'course':data['course'],
+                   'mentor_id':data['mentor_id']})
+    db.commit()
 
 if __name__ == '__main__':
     create_tables()
     insert_survey()
-    get_students()
