@@ -47,7 +47,7 @@ def insert_survey():
 
 
 def get_students():
-    cursor.execute('''SELECT * FROM Students''')
+    cursor.execute('''SELECT mentor_id, name, age, who, course, user_id FROM Students''')
     return cursor.fetchall()
 
 def insert_table(data):
