@@ -10,4 +10,4 @@ TOKEN = os.getenv("TOKEN")
 bot = Bot(TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot=bot, storage=storage)
-scheduler = AsyncIOScheduler
+scheduler = AsyncIOScheduler()
