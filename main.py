@@ -24,7 +24,6 @@ if __name__ == '__main__':
     dp.register_callback_query_handler(address_handler, lambda cb: cb.data == 'address')
     dp.register_message_handler(start_reminder, commands=['schedule'])
     dp.register_message_handler(cancel_notif, commands=['stop'])
-
     register_fsm_handler(dp)
     scheduler.start()
     dp.register_message_handler(get_sheduler_message)
