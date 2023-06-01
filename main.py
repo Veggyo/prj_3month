@@ -7,9 +7,9 @@ from handlers.myinfo import myinfo_handler
 from handlers.about import about_handler, address_handler
 from handlers.botbot import get_stud
 from handlers.anketa_fsm import register_fsm_handler
-from handlers.anketa_fsm import cancel_survey, start_survey
+from handlers.anketa_fsm import cancel_survey
 from aiogram.dispatcher.filters import Text
-from handlers.schedule import start_reminder, get_sheduler_message, cancel_notif
+from handlers.schedule import start_reminder, cancel_notif
 
 
 if __name__ == '__main__':
@@ -22,9 +22,8 @@ if __name__ == '__main__':
     dp.register_message_handler(myinfo_handler, commands=['myinfo'])
     dp.register_callback_query_handler(about_handler, lambda cb: cb.data == 'about')
     dp.register_callback_query_handler(address_handler, lambda cb: cb.data == 'address')
-    dp.register_message_handler(start_reminder, commands=['schedule'])
+    dp.register_callback_query_handler(start_reminder,lambda mess: mess.text.lower() == 'напомни')
     dp.register_message_handler(cancel_notif, commands=['stop'])
     register_fsm_handler(dp)
     scheduler.start()
-    dp.register_message_handler(get_sheduler_message)
     executor.start_polling(dp, skip_updates=True)
