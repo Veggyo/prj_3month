@@ -10,7 +10,9 @@ while True:
     response = requests.get(url=URL, timeout=10)
     if response.status_code == 200:
         end = 'По заданным критериям не найдено ни одного предложения'
-        break
+        for p in url:
+            if url == end:
+                break
     soup = BS(response.text, 'html.parser')
     cars_list = soup.find('div', class_='catalog-list')
 
@@ -22,4 +24,4 @@ while True:
         views = c.find('span', class_='catalog-item-views')
         year = model.find(class_='caption-year').text
         model = model.text.replace(f" , {year}", '').strip()
-        print(model)
+        print(model, params, more, info, views, year)
