@@ -1,11 +1,12 @@
 from aiogram import types
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 async def example(message: types.Message):
     userid = message.from_user.id
-    iid = message.from_id
+    id = message.from_id
     chat = message.chat.type
-    await message.answer(f"{userid=} {iid=} {chat=}")
+    await message.answer(f"{userid=} {id=} {chat=}")
     if chat != 'private':
         # проверка явл ли автор сообщения админом
         admins = await message.chat.get_administrators()
@@ -13,13 +14,19 @@ async def example(message: types.Message):
             if userid == admin['user']['id']:
                 await message.answer("Да, шеф")
                 break
-        await message.answer('admins')
+        await message.answer(admins)
 
         is_reply = message.reply_to_message
         if is_reply:
-            await message.answer('is_reply')
+            await message.answer(is_reply)
         else:
             await message.answer("Не реплай")
+
+
+def ban(admin_id):
+    kb = InlineKeyboardMarkup(resize_keyboard=True)
+    kb.add(InlineKeyboardButton('ban', callback_data=f'!ban {admin_id}'))
+    return kb
 
 
 async def check_admin(message: types.Message):
@@ -30,7 +37,7 @@ async def check_admin(message: types.Message):
 
 
 async def check_words(message: types.Message):
-    BAD_WORDS = ('плохой', 'дурак')
+    BAD_WORDS = ('плохой', 'дурак', 'тупой', 'негр')
     text = message.text.lower().strip().replace(' ', '')
     is_admin = await check_admin(message)
     if not is_admin:
@@ -39,8 +46,14 @@ async def check_words(message: types.Message):
                 await message.reply("Нельзя такое писать")
                 await message.delete()
                 break
-            else:
-                await message.reply(f'admin {message.from_user.username} use bad word')
+    elif is_admin:
+        for w in BAD_WORDS:
+            if w in text:
+                await message.reply(f'admin {message.from_user.username} use bad word', reply_markup=ban(check_admin))
+                await message.bot.ban_chat_member(
+                    chat_id=message.chat.id,
+                    user_id=message.reply_to_message.from_user.id
+                )
                 await message.delete()
 
 
@@ -74,4 +87,5 @@ async def check_mention(message: types.Message):
 def register_admin_handlers(dp):
     dp.register_message_handler(pin_message, commands=["pin"], commands_prefix="!")
     dp.register_message_handler(ban_user, commands=["ban"], commands_prefix="!")
+    dp.register_message_handler(check_words)
     dp.register_message_handler(check_mention)
