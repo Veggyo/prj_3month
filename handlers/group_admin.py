@@ -3,21 +3,21 @@ from aiogram import types
 
 async def example(message: types.Message):
     userid = message.from_user.id
-    id = message.from_id
+    iid = message.from_id
     chat = message.chat.type
-    await message.answer(f"{userid=} {id=} {chat=}")
+    await message.answer(f"{userid=} {iid=} {chat=}")
     if chat != 'private':
-        # проверка является ли автор сообщения админом
+        # проверка явл ли автор сообщения админом
         admins = await message.chat.get_administrators()
         for admin in admins:
             if userid == admin['user']['id']:
                 await message.answer("Да, шеф")
                 break
-        await message.answer(admins)
+        await message.answer('admins')
 
         is_reply = message.reply_to_message
         if is_reply:
-            await message.answer(is_reply)
+            await message.answer('is_reply')
         else:
             await message.answer("Не реплай")
 
@@ -39,6 +39,9 @@ async def check_words(message: types.Message):
                 await message.reply("Нельзя такое писать")
                 await message.delete()
                 break
+            else:
+                await message.reply(f'admin {message.from_user.username} use bad word')
+                await message.delete()
 
 
 async def pin_message(message: types.Message):
